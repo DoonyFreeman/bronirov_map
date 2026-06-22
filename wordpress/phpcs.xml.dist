@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<ruleset name="ServiceHub">
+	<description>Стандарты кодирования для плагинов ServiceHub.</description>
+
+	<!-- Проверяем только наш код. -->
+	<file>mu-plugins/servicehub-core</file>
+
+	<arg name="extensions" value="php"/>
+	<arg name="colors"/>
+	<arg value="sp"/>
+
+	<!-- PHP 8.1+ -->
+	<config name="testVersion" value="8.1-"/>
+	<config name="minimum_wp_version" value="6.4"/>
+
+	<rule ref="WordPress-Extra"/>
+	<rule ref="WordPress-Docs"/>
+	<rule ref="PHPCompatibilityWP"/>
+
+	<!-- Префикс/текстдомен проекта. -->
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="servicehub"/>
+				<element value="ServiceHub"/>
+				<element value="SERVICEHUB"/>
+			</property>
+		</properties>
+	</rule>
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="servicehub"/>
+			</property>
+		</properties>
+	</rule>
+</ruleset>

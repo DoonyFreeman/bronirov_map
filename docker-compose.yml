@@ -1,0 +1,68 @@
+# ServiceHub — локальная среда headless WordPress.
+# Запуск:  docker compose up -d  &&  docker compose run --rm wpcli
+
+services:
+  db:
+    image: mariadb:11
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: ${DB_NAME:-servicehub}
+      MARIADB_USER: ${DB_USER:-servicehub}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-servicehub}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  wordpress:
+    image: wordpress:6.7-php8.3-apache
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${WP_PORT:-8080}:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: ${DB_NAME:-servicehub}
+      WORDPRESS_DB_USER: ${DB_USER:-servicehub}
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD:-servicehub}
+      # Передаём секрет JWT в wp-config (используется WPGraphQL JWT в Спринте 5)
+      WORDPRESS_CONFIG_EXTRA: |
+        define('GRAPHQL_JWT_AUTH_SECRET_KEY', '${GRAPHQL_JWT_AUTH_SECRET_KEY:-change-me}');
+    volumes:
+      - wp_data:/var/www/html
+      # Версионируемый код плагина монтируется поверх mu-plugins
+      - ./wordpress/mu-plugins:/var/www/html/wp-content/mu-plugins
+
+  # Одноразовый сервис: ставит ядро WP и плагины. Идемпотентен.
+  wpcli:
+    image: wordpress:cli-php8.3
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: ${DB_NAME:-servicehub}
+      WORDPRESS_DB_USER: ${DB_USER:-servicehub}
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD:-servicehub}
+      WP_URL: ${WP_URL:-http://localhost:8080}
+      WP_TITLE: ${WP_TITLE:-ServiceHub}
+      WP_ADMIN_USER: ${WP_ADMIN_USER:-admin}
+      WP_ADMIN_PASSWORD: ${WP_ADMIN_PASSWORD:-admin}
+      WP_ADMIN_EMAIL: ${WP_ADMIN_EMAIL:-admin@servicehub.test}
+      # Больше памяти для установки плагинов через WP-CLI.
+      WP_CLI_PHP_ARGS: -d memory_limit=512M
+    volumes:
+      - wp_data:/var/www/html
+      - ./wordpress/mu-plugins:/var/www/html/wp-content/mu-plugins
+      - ./wordpress/setup:/setup:ro
+    entrypoint: ["bash", "/setup/install.sh"]
+
+volumes:
+  db_data:
+  wp_data:
