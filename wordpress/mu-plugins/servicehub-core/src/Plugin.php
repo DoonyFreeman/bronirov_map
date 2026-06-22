@@ -27,6 +27,11 @@ final class Plugin {
 	 */
 	private array $modules = array(
 		Graphql\SmokeField::class,
+		PostTypes\CompanyPostType::class,
+		PostTypes\ServicePostType::class,
+		Taxonomies\CatalogTaxonomies::class,
+		Fields\CompanyFields::class,
+		Revalidation\RevalidationWebhook::class,
 	);
 
 	/**

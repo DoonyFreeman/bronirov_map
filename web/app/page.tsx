@@ -1,62 +1,57 @@
-import { gqlFetch } from '@/lib/graphql/client';
+import { CompanyGrid } from '@/components/CompanyGrid';
+import { SearchFilters } from '@/components/SearchFilters';
+import { getCatalogFilters, getCompanies } from '@/lib/api/companies';
+import type { Company, TaxonomyTermWithCount } from '@/lib/graphql/types';
 
-// Главная страница на Спринте 0 — smoke-проверка связки Next ↔ WPGraphQL.
-// Каталог компаний появится в Спринте 1. Не кэшируем во время сборки.
-export const dynamic = 'force-dynamic';
-
-interface ServiceHubInfo {
-  serviceHubInfo: { version: string | null } | null;
-}
-
-async function getBackendStatus(): Promise<
-  { ok: true; version: string } | { ok: false; error: string }
-> {
-  try {
-    const data = await gqlFetch<ServiceHubInfo>(/* GraphQL */ `
-      query ServiceHubInfo {
-        serviceHubInfo {
-          version
-        }
-      }
-    `);
-    return { ok: true, version: data.serviceHubInfo?.version ?? 'unknown' };
-  } catch (error) {
-    return { ok: false, error: error instanceof Error ? error.message : String(error) };
-  }
-}
+// ISR: страница пересобирается по тегу `companies:list` (вебхук из WP) или раз в час.
+export const revalidate = 3600;
 
 export default async function HomePage() {
-  const status = await getBackendStatus();
+  let companies: Company[] = [];
+  let cities: TaxonomyTermWithCount[] = [];
+  let categories: TaxonomyTermWithCount[] = [];
+  let backendOk = true;
+
+  try {
+    [companies, { cities, categories }] = await Promise.all([
+      getCompanies({}),
+      getCatalogFilters(),
+    ]);
+  } catch {
+    backendOk = false;
+  }
 
   return (
-    <main style={{ maxWidth: 640, margin: '0 auto', padding: '4rem 1.5rem' }}>
-      <h1 style={{ fontSize: '2rem', margin: 0 }}>ServiceHub</h1>
-      <p style={{ color: 'var(--muted)' }}>Каталог услуг и онлайн-бронирование.</p>
-
-      <section
-        style={{
-          marginTop: '2rem',
-          padding: '1.25rem 1.5rem',
-          border: '1px solid #23262d',
-          borderRadius: 'var(--radius)',
-        }}
-      >
-        <h2 style={{ fontSize: '1rem', marginTop: 0 }}>Состояние бэкенда (WPGraphQL)</h2>
-        {status.ok ? (
-          <p style={{ color: 'var(--ok)' }}>✅ Подключено. servicehub-core v{status.version}</p>
-        ) : (
-          <p style={{ color: 'var(--err)' }}>
-            ⚠️ Нет связи с GraphQL. Запустите <code>docker compose up -d</code> и{' '}
-            <code>docker compose run --rm wpcli</code>.
-            <br />
-            <small style={{ color: 'var(--muted)' }}>{status.error}</small>
-          </p>
-        )}
+    <main>
+      <section className="hero container">
+        <h1>Найдите услугу и мастера рядом</h1>
+        <p>
+          Салоны, барбершопы, стоматологии и сервисы вашего города. Сравните цены, посмотрите
+          контакты и запишитесь онлайн.
+        </p>
+        <div style={{ marginTop: 'var(--space-8)', textAlign: 'left' }}>
+          <SearchFilters cities={cities} categories={categories} />
+        </div>
       </section>
 
-      <p style={{ marginTop: '2rem', color: 'var(--muted)' }}>
-        Спринт 0 — фундамент. Каталог компаний и фильтры — Спринт 1.
-      </p>
+      <section className="section container">
+        <div className="section__head">
+          <h2>Компании на платформе</h2>
+          <span className="section__count">{companies.length} в каталоге</span>
+        </div>
+
+        {backendOk ? (
+          <CompanyGrid companies={companies.slice(0, 8)} />
+        ) : (
+          <div className="empty">
+            <p>Нет связи с бэкендом.</p>
+            <p>
+              Запустите <code>docker compose up -d</code> и{' '}
+              <code>docker compose run --rm wpcli</code>.
+            </p>
+          </div>
+        )}
+      </section>
     </main>
   );
 }

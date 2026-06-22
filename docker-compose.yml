@@ -34,6 +34,11 @@ services:
       # Передаём секрет JWT в wp-config (используется WPGraphQL JWT в Спринте 5)
       WORDPRESS_CONFIG_EXTRA: |
         define('GRAPHQL_JWT_AUTH_SECRET_KEY', '${GRAPHQL_JWT_AUTH_SECRET_KEY:-change-me}');
+      # Вебхук ревалидации Next.js (mu-plugin читает эти переменные).
+      NEXT_REVALIDATE_URL: ${NEXT_REVALIDATE_URL:-http://host.docker.internal:3000/api/revalidate}
+      REVALIDATE_SECRET: ${REVALIDATE_SECRET:-change-me-revalidate-secret}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - wp_data:/var/www/html
       # Версионируемый код плагина монтируется поверх mu-plugins
@@ -42,6 +47,9 @@ services:
   # Одноразовый сервис: ставит ядро WP и плагины. Идемпотентен.
   wpcli:
     image: wordpress:cli-php8.3
+    # root нужен, чтобы создавать каталоги в wp-content (том принадлежит root);
+    # в конце скрипта возвращаем владельца www-data для записи загрузок.
+    user: root
     depends_on:
       db:
         condition: service_healthy

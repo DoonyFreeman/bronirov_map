@@ -11,6 +11,9 @@ set -euo pipefail
 
 cd /var/www/html
 
+# Скрипт работает от root → wp-cli требует --allow-root. Заворачиваем вызовы.
+wp() { command wp --allow-root "$@"; }
+
 echo "→ Жду, пока контейнер wordpress развернёт ядро и wp-config.php…"
 for i in $(seq 1 60); do
   if [ -f wp-settings.php ] && wp config path >/dev/null 2>&1; then
@@ -56,6 +59,9 @@ install_plugin wp-graphql              # обязательный — даёт /
 install_plugin advanced-custom-fields  # ACF (free); Pro ставится вручную по лицензии
 install_plugin wpgraphql-acf           # мост ACF → GraphQL
 # wp-graphql-jwt-authentication — только на GitHub, подключим в Спринте 5
+
+# Возвращаем владельца www-data, чтобы apache мог писать загрузки/обновления.
+chown -R www-data:www-data wp-content 2>/dev/null || true
 
 echo "→ Готово. GraphQL endpoint: ${WP_URL}/graphql"
 wp plugin list --status=active --field=name || true
