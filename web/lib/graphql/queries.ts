@@ -11,6 +11,8 @@ export const COMPANY_CARD_FRAGMENT = /* GraphQL */ `
     priceFrom
     latitude
     longitude
+    averageRating
+    reviewCount
     featuredImage {
       node {
         sourceUrl
@@ -38,6 +40,49 @@ export const COMPANIES_QUERY = /* GraphQL */ `
     companies(first: $first, where: { city: $city, category: $category }) {
       nodes {
         ...CompanyCard
+      }
+    }
+  }
+`;
+
+export const COMPANY_BY_SLUG_QUERY = /* GraphQL */ `
+  ${COMPANY_CARD_FRAGMENT}
+  query CompanyBySlug($slug: ID!) {
+    company(id: $slug, idType: SLUG) {
+      ...CompanyCard
+      content
+      services {
+        databaseId
+        title
+        price
+        duration
+      }
+      reviews {
+        databaseId
+        date
+        author
+        rating
+        text
+        verified
+      }
+      hours {
+        day
+        open
+        close
+      }
+      gallery {
+        sourceUrl
+        altText
+      }
+    }
+  }
+`;
+
+export const ALL_COMPANY_SLUGS_QUERY = /* GraphQL */ `
+  query AllCompanySlugs {
+    companies(first: 1000) {
+      nodes {
+        slug
       }
     }
   }

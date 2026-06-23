@@ -15,6 +15,8 @@ namespace ServiceHub\Revalidation;
 
 use ServiceHub\Contracts\Module;
 use ServiceHub\PostTypes\CompanyPostType;
+use ServiceHub\PostTypes\ReviewPostType;
+use ServiceHub\PostTypes\ServicePostType;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -29,6 +31,10 @@ final class RevalidationWebhook implements Module {
 	public function register(): void {
 		add_action( 'save_post_' . CompanyPostType::POST_TYPE, array( $this, 'on_company_saved' ), 10, 1 );
 		add_action( 'trashed_post', array( $this, 'on_post_changed' ), 10, 1 );
+
+		// Изменение услуги/отзыва ревалидирует страницу их компании.
+		add_action( 'save_post_' . ServicePostType::POST_TYPE, array( $this, 'on_related_saved' ), 30, 1 );
+		add_action( 'save_post_' . ReviewPostType::POST_TYPE, array( $this, 'on_related_saved' ), 30, 1 );
 	}
 
 	/**
@@ -53,6 +59,24 @@ final class RevalidationWebhook implements Module {
 			return;
 		}
 		$this->revalidate( array( 'companies:list', 'company:' . $post_id ) );
+	}
+
+	/**
+	 * Сохранение услуги/отзыва → ревалидируем страницу связанной компании.
+	 *
+	 * @param int $post_id ID записи (service или review).
+	 */
+	public function on_related_saved( int $post_id ): void {
+		if ( wp_is_post_revision( $post_id ) || wp_is_post_autosave( $post_id ) ) {
+			return;
+		}
+		$meta_key   = ServicePostType::POST_TYPE === get_post_type( $post_id )
+			? 'service_company'
+			: 'review_company';
+		$company_id = (int) get_post_meta( $post_id, $meta_key, true );
+		if ( $company_id ) {
+			$this->revalidate( array( 'companies:list', 'company:' . $company_id ) );
+		}
 	}
 
 	/**

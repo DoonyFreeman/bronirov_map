@@ -1,10 +1,18 @@
 import { gqlFetch } from '@/lib/graphql/client';
-import { CATALOG_FILTERS_QUERY, COMPANIES_QUERY } from '@/lib/graphql/queries';
+import {
+  ALL_COMPANY_SLUGS_QUERY,
+  CATALOG_FILTERS_QUERY,
+  COMPANIES_QUERY,
+  COMPANY_BY_SLUG_QUERY,
+} from '@/lib/graphql/queries';
 import type {
+  AllCompanySlugsResponse,
   CatalogFiltersResponse,
   CompaniesResponse,
   Company,
+  CompanyBySlugResponse,
   CompanyFilters,
+  CompanyProfile,
   TaxonomyTermWithCount,
 } from '@/lib/graphql/types';
 
@@ -25,6 +33,31 @@ export async function getCompanies(filters: CompanyFilters = {}): Promise<Compan
     revalidate: REVALIDATE_SECONDS,
   });
   return data.companies.nodes;
+}
+
+/**
+ * Полный профиль компании по slug (для страницы /company/[slug]).
+ * Тег `companies:list` ревалидируется вебхуком при изменении компании,
+ * её услуг или отзывов.
+ */
+export async function getCompanyBySlug(slug: string): Promise<CompanyProfile | null> {
+  const data = await gqlFetch<CompanyBySlugResponse>(COMPANY_BY_SLUG_QUERY, {
+    variables: { slug },
+    tags: [CATALOG_TAG, `company:${slug}`],
+    revalidate: REVALIDATE_SECONDS,
+  });
+  return data.company;
+}
+
+/**
+ * Слаги всех компаний — для generateStaticParams и sitemap.
+ */
+export async function getAllCompanySlugs(): Promise<string[]> {
+  const data = await gqlFetch<AllCompanySlugsResponse>(ALL_COMPANY_SLUGS_QUERY, {
+    tags: [CATALOG_TAG],
+    revalidate: REVALIDATE_SECONDS,
+  });
+  return data.companies.nodes.map((node) => node.slug);
 }
 
 /**

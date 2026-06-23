@@ -1,5 +1,7 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
+import { RatingStars } from '@/components/RatingStars';
 import type { Company } from '@/lib/graphql/types';
 
 const priceFormatter = new Intl.NumberFormat('ru-RU');
@@ -10,7 +12,7 @@ export function CompanyCard({ company }: { company: Company }) {
   const image = company.featuredImage?.node;
 
   return (
-    <article className="card">
+    <Link href={`/company/${company.slug}`} className="card">
       <div className="card__media">
         {image?.sourceUrl ? (
           <Image
@@ -28,6 +30,10 @@ export function CompanyCard({ company }: { company: Company }) {
       <div className="card__body">
         <h3 className="card__title">{company.title}</h3>
 
+        {company.averageRating ? (
+          <RatingStars rating={company.averageRating} count={company.reviewCount} size={15} />
+        ) : null}
+
         <div className="card__meta">
           {category && <span className="chip">{category.name}</span>}
           {city && <span className="chip chip--city">{city.name}</span>}
@@ -41,6 +47,6 @@ export function CompanyCard({ company }: { company: Company }) {
           </div>
         )}
       </div>
-    </article>
+    </Link>
   );
 }

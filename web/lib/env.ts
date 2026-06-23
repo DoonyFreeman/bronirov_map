@@ -15,4 +15,6 @@ export const env = {
   graphqlEndpoint: required('WORDPRESS_GRAPHQL_ENDPOINT', 'http://localhost:8080/graphql'),
   /** Публичный базовый URL WordPress (для картинок/ссылок). */
   wordpressUrl: required('NEXT_PUBLIC_WORDPRESS_URL', 'http://localhost:8080'),
+  /** Публичный базовый URL фронтенда (канонические ссылки, JSON-LD, sitemap). */
+  siteUrl: required('NEXT_PUBLIC_SITE_URL', 'http://localhost:3000'),
 } as const;

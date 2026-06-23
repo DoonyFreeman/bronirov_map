@@ -29,8 +29,12 @@ final class Plugin {
 		Graphql\SmokeField::class,
 		PostTypes\CompanyPostType::class,
 		PostTypes\ServicePostType::class,
+		PostTypes\ReviewPostType::class,
 		Taxonomies\CatalogTaxonomies::class,
 		Fields\CompanyFields::class,
+		Fields\ServiceFields::class,
+		Fields\ReviewFields::class,
+		Fields\CompanyProfileFields::class,
 		Revalidation\RevalidationWebhook::class,
 	);
 
