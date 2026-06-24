@@ -78,6 +78,38 @@ export const COMPANY_BY_SLUG_QUERY = /* GraphQL */ `
   }
 `;
 
+export const SERVICE_FOR_BOOKING_QUERY = /* GraphQL */ `
+  query ServiceForBooking($id: ID!) {
+    service(id: $id, idType: DATABASE_ID) {
+      databaseId
+      title
+      price
+      duration
+      company {
+        title
+        slug
+      }
+    }
+  }
+`;
+
+export const AVAILABLE_SLOTS_QUERY = /* GraphQL */ `
+  query AvailableSlots($serviceId: ID!, $date: String!) {
+    availableSlots(serviceId: $serviceId, date: $date)
+  }
+`;
+
+export const CREATE_BOOKING_MUTATION = /* GraphQL */ `
+  mutation CreateServiceBooking($input: CreateServiceBookingInput!) {
+    createServiceBooking(input: $input) {
+      bookingDatabaseId
+      status
+      date
+      time
+    }
+  }
+`;
+
 export const ALL_COMPANY_SLUGS_QUERY = /* GraphQL */ `
   query AllCompanySlugs {
     companies(first: 1000) {

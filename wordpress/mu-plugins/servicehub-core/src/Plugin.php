@@ -30,11 +30,14 @@ final class Plugin {
 		PostTypes\CompanyPostType::class,
 		PostTypes\ServicePostType::class,
 		PostTypes\ReviewPostType::class,
+		PostTypes\BookingPostType::class,
 		Taxonomies\CatalogTaxonomies::class,
 		Fields\CompanyFields::class,
 		Fields\ServiceFields::class,
 		Fields\ReviewFields::class,
 		Fields\CompanyProfileFields::class,
+		Graphql\AvailabilityField::class,
+		Graphql\CreateBookingMutation::class,
 		Revalidation\RevalidationWebhook::class,
 	);
 

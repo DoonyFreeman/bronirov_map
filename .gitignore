@@ -33,3 +33,8 @@ Thumbs.db
 
 # Docker volumes (если складываются локально)
 .docker-data/
+
+# Тулинг understand-anything и локальные доки
+.understand-anything/
+docs/
+.phpunit.result.cache

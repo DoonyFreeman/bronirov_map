@@ -77,6 +77,45 @@ export interface AllCompanySlugsResponse {
   companies: { nodes: { slug: string }[] };
 }
 
+export interface ServiceForBooking {
+  databaseId: number;
+  title: string;
+  price: number | null;
+  duration: number | null;
+  company: { title: string; slug: string } | null;
+}
+
+export interface ServiceForBookingResponse {
+  service: ServiceForBooking | null;
+}
+
+export interface AvailableSlotsResponse {
+  availableSlots: string[];
+}
+
+export interface CreateBookingInput {
+  serviceId: string;
+  date: string;
+  time: string;
+  clientName: string;
+  clientPhone: string;
+  clientEmail?: string;
+  idempotencyKey: string;
+  notes?: string;
+  website?: string;
+}
+
+export interface CreateBookingResult {
+  bookingDatabaseId: number | null;
+  status: string | null;
+  date: string | null;
+  time: string | null;
+}
+
+export interface CreateBookingResponse {
+  createServiceBooking: CreateBookingResult | null;
+}
+
 export interface CompaniesResponse {
   companies: { nodes: Company[] };
 }

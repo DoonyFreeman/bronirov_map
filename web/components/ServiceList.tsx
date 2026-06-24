@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import type { Service } from '@/lib/graphql/types';
 
 const priceFormatter = new Intl.NumberFormat('ru-RU');
@@ -24,9 +26,14 @@ export function ServiceList({ services }: { services: Service[] }) {
               <span className="service-row__dur">{formatDuration(service.duration)}</span>
             )}
           </div>
-          {typeof service.price === 'number' && (
-            <span className="service-row__price">{priceFormatter.format(service.price)} ₽</span>
-          )}
+          <div className="service-row__actions">
+            {typeof service.price === 'number' && (
+              <span className="service-row__price">{priceFormatter.format(service.price)} ₽</span>
+            )}
+            <Link href={`/booking/${service.databaseId}`} className="btn btn--ghost btn--sm">
+              Записаться
+            </Link>
+          </div>
         </li>
       ))}
     </ul>
