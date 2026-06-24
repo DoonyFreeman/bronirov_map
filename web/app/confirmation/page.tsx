@@ -1,14 +1,24 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
+import { env } from '@/lib/env';
+
 export const metadata: Metadata = { title: 'Запись принята' };
 
 interface ConfirmationProps {
-  searchParams: Promise<{ service?: string; company?: string; date?: string; time?: string }>;
+  searchParams: Promise<{
+    service?: string;
+    company?: string;
+    date?: string;
+    time?: string;
+    booking?: string;
+  }>;
 }
 
 export default async function ConfirmationPage({ searchParams }: ConfirmationProps) {
-  const { service, company, date, time } = await searchParams;
+  const { service, company, date, time, booking } = await searchParams;
+  const telegramLink =
+    env.telegramBot && booking ? `https://t.me/${env.telegramBot}?start=${booking}` : null;
 
   return (
     <main className="container section" style={{ maxWidth: 640, textAlign: 'center' }}>
@@ -55,6 +65,14 @@ export default async function ConfirmationPage({ searchParams }: ConfirmationPro
             </p>
           )}
         </div>
+      )}
+
+      {telegramLink && (
+        <p style={{ marginBottom: 'var(--space-6)' }}>
+          <a href={telegramLink} className="btn btn--ghost" target="_blank" rel="noopener">
+            Получать статус в Telegram
+          </a>
+        </p>
       )}
 
       <Link href="/" className="btn btn--primary">

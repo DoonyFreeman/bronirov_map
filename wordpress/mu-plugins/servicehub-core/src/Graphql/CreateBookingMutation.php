@@ -163,6 +163,9 @@ final class CreateBookingMutation implements Module {
 			update_post_meta( $booking_id, $meta_key, $value );
 		}
 
+		// Уведомления (Telegram и т.п.) подписаны на это событие — meta уже записана.
+		do_action( 'servicehub_booking_created', (int) $booking_id );
+
 		return array(
 			'id'     => (int) $booking_id,
 			'status' => BookingPostType::STATUS_PENDING,

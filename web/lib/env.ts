@@ -17,4 +17,6 @@ export const env = {
   wordpressUrl: required('NEXT_PUBLIC_WORDPRESS_URL', 'http://localhost:8080'),
   /** Публичный базовый URL фронтенда (канонические ссылки, JSON-LD, sitemap). */
   siteUrl: required('NEXT_PUBLIC_SITE_URL', 'http://localhost:3000'),
+  /** Username Telegram-бота для deep-link (пусто — блок не показываем). */
+  telegramBot: process.env.NEXT_PUBLIC_TELEGRAM_BOT ?? '',
 } as const;

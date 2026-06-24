@@ -37,6 +37,9 @@ services:
       # Вебхук ревалидации Next.js (mu-plugin читает эти переменные).
       NEXT_REVALIDATE_URL: ${NEXT_REVALIDATE_URL:-http://host.docker.internal:3000/api/revalidate}
       REVALIDATE_SECRET: ${REVALIDATE_SECRET:-change-me-revalidate-secret}
+      # Telegram-уведомления (пусто = выключено).
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_WEBHOOK_SECRET: ${TELEGRAM_WEBHOOK_SECRET:-change-me-telegram-secret}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:

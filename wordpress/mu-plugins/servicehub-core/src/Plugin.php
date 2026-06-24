@@ -38,6 +38,7 @@ final class Plugin {
 		Fields\CompanyProfileFields::class,
 		Graphql\AvailabilityField::class,
 		Graphql\CreateBookingMutation::class,
+		Notifications\TelegramNotifications::class,
 		Revalidation\RevalidationWebhook::class,
 	);
 

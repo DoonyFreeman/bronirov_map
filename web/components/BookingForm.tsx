@@ -84,6 +84,9 @@ export function BookingForm({ serviceId, serviceTitle, companyTitle }: BookingFo
         date,
         time,
       });
+      if (data.result?.bookingDatabaseId) {
+        params.set('booking', String(data.result.bookingDatabaseId));
+      }
       router.push(`/confirmation?${params.toString()}`);
     } catch {
       setError('Сетевая ошибка. Попробуйте ещё раз.');
