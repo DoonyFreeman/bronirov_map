@@ -21,12 +21,12 @@ define( 'SERVICEHUB_DIR', __DIR__ );
  * Простой PSR-4-автозагрузчик для неймспейса ServiceHub\ → src/.
  */
 spl_autoload_register(
-	static function ( string $class ): void {
+	static function ( string $class_name ): void {
 		$prefix = 'ServiceHub\\';
-		if ( strncmp( $class, $prefix, strlen( $prefix ) ) !== 0 ) {
+		if ( strncmp( $class_name, $prefix, strlen( $prefix ) ) !== 0 ) {
 			return;
 		}
-		$relative = substr( $class, strlen( $prefix ) );
+		$relative = substr( $class_name, strlen( $prefix ) );
 		$path     = SERVICEHUB_DIR . '/src/' . str_replace( '\\', '/', $relative ) . '.php';
 		if ( is_readable( $path ) ) {
 			require_once $path;

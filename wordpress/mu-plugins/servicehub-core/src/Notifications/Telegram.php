@@ -41,7 +41,7 @@ final class Telegram {
 			'confirmed' => '✅ Запись подтверждена',
 			'cancelled' => '❌ Запись отклонена',
 		);
-		$head = $labels[ $data['status'] ] ?? 'Запись';
+		$head   = $labels[ $data['status'] ] ?? 'Запись';
 		return sprintf(
 			"%s\n\nУслуга: %s\nКомпания: %s\nДата: %s %s\nКлиент: %s",
 			$head,

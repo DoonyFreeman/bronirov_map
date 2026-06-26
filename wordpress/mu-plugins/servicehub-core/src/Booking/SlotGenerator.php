@@ -20,13 +20,13 @@ final class SlotGenerator {
 	/**
 	 * Свободные слоты на день.
 	 *
-	 * @param string|null          $open        Время открытия 'HH:MM' (null — выходной).
-	 * @param string|null          $close       Время закрытия 'HH:MM'.
-	 * @param array<int, array>    $breaks      Перерывы: [['start'=>'13:00','end'=>'14:00']].
-	 * @param int                  $duration    Длительность услуги, мин.
-	 * @param int                  $buffer      Буфер между записями, мин.
-	 * @param int                  $step        Шаг сетки слотов, мин.
-	 * @param array<int, array>    $booked      Занятые слоты: [['time'=>'14:00','duration'=>60]].
+	 * @param string|null       $open        Время открытия 'HH:MM' (null — выходной).
+	 * @param string|null       $close       Время закрытия 'HH:MM'.
+	 * @param array<int, array> $breaks      Перерывы: [['start'=>'13:00','end'=>'14:00']].
+	 * @param int               $duration    Длительность услуги, мин.
+	 * @param int               $buffer      Буфер между записями, мин.
+	 * @param int               $step        Шаг сетки слотов, мин.
+	 * @param array<int, array> $booked      Занятые слоты: [['time'=>'14:00','duration'=>60]].
 	 * @return array<int, string>               Времена начала 'HH:MM'.
 	 */
 	public function generate(
@@ -45,7 +45,7 @@ final class SlotGenerator {
 		$open_min  = $this->to_minutes( $open );
 		$close_min = $this->to_minutes( $close );
 
-		$break_intervals = array_map(
+		$break_intervals  = array_map(
 			fn ( $b ) => array( $this->to_minutes( $b['start'] ), $this->to_minutes( $b['end'] ) ),
 			$breaks
 		);
@@ -74,8 +74,8 @@ final class SlotGenerator {
 	/**
 	 * Пересекается ли слот [start,end) с каким-либо перерывом.
 	 *
-	 * @param int                    $start     Начало слота, мин.
-	 * @param int                    $end       Конец слота, мин.
+	 * @param int                        $start     Начало слота, мин.
+	 * @param int                        $end       Конец слота, мин.
 	 * @param array<int, array{int,int}> $breaks Перерывы в минутах.
 	 */
 	private function overlaps_any_break( int $start, int $end, array $breaks ): bool {

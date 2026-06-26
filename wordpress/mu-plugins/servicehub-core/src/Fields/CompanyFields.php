@@ -191,14 +191,14 @@ final class CompanyFields implements Module {
 	 * @return array<string, mixed>
 	 */
 	public function filter_connection_query_args( array $query_args, $source, array $args, $context, $info ): array {
-		$post_type = $query_args['post_type'] ?? '';
+		$post_type  = $query_args['post_type'] ?? '';
 		$is_company = CompanyPostType::POST_TYPE === $post_type
 			|| ( is_array( $post_type ) && in_array( CompanyPostType::POST_TYPE, $post_type, true ) );
 		if ( ! $is_company ) {
 			return $query_args;
 		}
 
-		$where    = $args['where'] ?? array();
+		$where     = $args['where'] ?? array();
 		$tax_query = array();
 
 		if ( ! empty( $where['city'] ) ) {
@@ -220,8 +220,8 @@ final class CompanyFields implements Module {
 			if ( count( $tax_query ) > 1 ) {
 				$tax_query['relation'] = 'AND';
 			}
-			$existing                 = $query_args['tax_query'] ?? array();
-			$query_args['tax_query']  = array_merge( $existing, $tax_query );
+			$existing                = $query_args['tax_query'] ?? array();
+			$query_args['tax_query'] = array_merge( $existing, $tax_query );
 		}
 
 		return $query_args;

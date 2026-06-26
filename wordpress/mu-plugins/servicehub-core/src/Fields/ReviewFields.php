@@ -84,12 +84,12 @@ final class ReviewFields implements Module {
 						'type'  => 'text',
 					),
 					array(
-						'key'           => 'field_' . self::META_RATING,
-						'name'          => self::META_RATING,
-						'label'         => __( 'Оценка (1–5)', 'servicehub' ),
-						'type'          => 'number',
-						'min'           => 1,
-						'max'           => 5,
+						'key'   => 'field_' . self::META_RATING,
+						'name'  => self::META_RATING,
+						'label' => __( 'Оценка (1–5)', 'servicehub' ),
+						'type'  => 'number',
+						'min'   => 1,
+						'max'   => 5,
 					),
 					array(
 						'key'   => 'field_' . self::META_TEXT,

@@ -27,8 +27,16 @@ final class AvailabilityService {
 	private const STEP_MINUTES     = 30;
 	private const DEFAULT_DURATION = 60;
 
+	/**
+	 * Чистый движок генерации слотов.
+	 *
+	 * @var SlotGenerator
+	 */
 	private SlotGenerator $generator;
 
+	/**
+	 * @param SlotGenerator|null $generator Движок слотов (для подмены в тестах).
+	 */
 	public function __construct( ?SlotGenerator $generator = null ) {
 		$this->generator = $generator ?? new SlotGenerator();
 	}
@@ -58,7 +66,7 @@ final class AvailabilityService {
 		$duration = $duration > 0 ? $duration : self::DEFAULT_DURATION;
 		$buffer   = (int) get_post_meta( $service_id, 'service_buffer', true );
 
-		$weekday = strtolower( gmdate( 'D', $timestamp ) ); // mon, tue, …
+		$weekday = strtolower( gmdate( 'D', $timestamp ) ); // mon, tue и т.д.
 		$hours   = $this->hours_for_day( $company_id, $weekday );
 		if ( null === $hours ) {
 			return array();

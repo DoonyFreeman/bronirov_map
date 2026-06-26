@@ -13,7 +13,14 @@
 	<config name="testVersion" value="8.1-"/>
 	<config name="minimum_wp_version" value="6.4"/>
 
-	<rule ref="WordPress-Extra"/>
+	<rule ref="WordPress-Extra">
+		<!-- PSR-4 автозагрузка: имена файлов = имена классов, не hyphenated. -->
+		<exclude name="WordPress.Files.FileName"/>
+		<!-- Свойства внешнего API (модели WPGraphQL: $source->databaseId). -->
+		<exclude name="WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase"/>
+		<!-- UserError в GraphQL — не HTML-вывод, экранирование неуместно. -->
+		<exclude name="WordPress.Security.EscapeOutput.ExceptionNotEscaped"/>
+	</rule>
 	<rule ref="WordPress-Docs"/>
 	<rule ref="PHPCompatibilityWP"/>
 
