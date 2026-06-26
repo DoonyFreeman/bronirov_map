@@ -158,6 +158,8 @@ final class CreateBookingMutation implements Module {
 			'booking_client_email'    => sanitize_email( (string) ( $input['clientEmail'] ?? '' ) ),
 			'booking_idempotency_key' => $key,
 			'booking_notes'           => sanitize_textarea_field( (string) ( $input['notes'] ?? '' ) ),
+			// Привязка к пользователю, если запрос авторизован (для «моих броней»).
+			'booking_user'            => get_current_user_id(),
 		);
 		foreach ( $meta as $meta_key => $value ) {
 			update_post_meta( $booking_id, $meta_key, $value );

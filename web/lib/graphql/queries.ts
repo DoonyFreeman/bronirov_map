@@ -110,6 +110,53 @@ export const CREATE_BOOKING_MUTATION = /* GraphQL */ `
   }
 `;
 
+export const LOGIN_MUTATION = /* GraphQL */ `
+  mutation Login($username: String!, $password: String!) {
+    login(input: { clientMutationId: "web", username: $username, password: $password }) {
+      authToken
+    }
+  }
+`;
+
+export const MY_BOOKINGS_QUERY = /* GraphQL */ `
+  query MyBookings {
+    myBookings {
+      databaseId
+      date
+      time
+      status
+      serviceName
+      companyName
+    }
+  }
+`;
+
+export const MY_FAVORITES_QUERY = /* GraphQL */ `
+  ${COMPANY_CARD_FRAGMENT}
+  query MyFavorites {
+    myFavorites {
+      ...CompanyCard
+    }
+  }
+`;
+
+export const CANCEL_BOOKING_MUTATION = /* GraphQL */ `
+  mutation CancelBooking($id: ID!) {
+    cancelBooking(input: { clientMutationId: "web", bookingId: $id }) {
+      status
+    }
+  }
+`;
+
+export const TOGGLE_FAVORITE_MUTATION = /* GraphQL */ `
+  mutation ToggleFavorite($id: ID!) {
+    toggleFavorite(input: { clientMutationId: "web", companyId: $id }) {
+      isFavorite
+      companyIds
+    }
+  }
+`;
+
 export const ALL_COMPANY_SLUGS_QUERY = /* GraphQL */ `
   query AllCompanySlugs {
     companies(first: 1000) {

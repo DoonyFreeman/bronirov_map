@@ -58,7 +58,14 @@ echo "→ Плагины:"
 install_plugin wp-graphql              # обязательный — даёт /graphql
 install_plugin advanced-custom-fields  # ACF (free); Pro ставится вручную по лицензии
 install_plugin wpgraphql-acf           # мост ACF → GraphQL
-# wp-graphql-jwt-authentication — только на GitHub, подключим в Спринте 5
+
+# JWT-аутентификация для WPGraphQL (нет в каталоге wp.org — ставим из GitHub).
+JWT_ZIP="https://github.com/wp-graphql/wp-graphql-jwt-authentication/archive/refs/heads/master.zip"
+if ! wp plugin is-installed wp-graphql-jwt-authentication >/dev/null 2>&1; then
+  echo "  • устанавливаю wp-graphql-jwt-authentication (GitHub)…"
+  wp plugin install "$JWT_ZIP" --activate || echo "    ! не удалось (поставьте вручную)"
+fi
+wp plugin activate wp-graphql-jwt-authentication >/dev/null 2>&1 || true
 
 # Возвращаем владельца www-data, чтобы apache мог писать загрузки/обновления.
 chown -R www-data:www-data wp-content 2>/dev/null || true

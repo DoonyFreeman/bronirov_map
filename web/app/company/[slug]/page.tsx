@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { FavoriteButton } from '@/components/FavoriteButton';
 import { HoursTable } from '@/components/HoursTable';
 import { RatingStars } from '@/components/RatingStars';
 import { ReviewsList } from '@/components/ReviewsList';
@@ -79,6 +80,7 @@ export default async function CompanyProfilePage({ params }: ProfileProps) {
           <RatingStars rating={company.averageRating} count={company.reviewCount} />
           {category && <span className="chip">{category.name}</span>}
           {city && <span className="chip chip--city">{city.name}</span>}
+          <FavoriteButton companyId={company.databaseId} />
         </div>
         <div className="profile-contacts">
           {company.address && <span>{company.address}</span>}

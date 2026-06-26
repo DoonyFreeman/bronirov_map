@@ -7,6 +7,8 @@ export interface FetchOptions {
   tags?: string[];
   /** Время жизни кэша в секундах (ISR). `0` — без кэша. */
   revalidate?: number;
+  /** JWT для авторизованных запросов (Authorization: Bearer). */
+  token?: string;
 }
 
 interface GraphQLResponse<TResult> {
@@ -23,11 +25,15 @@ interface GraphQLResponse<TResult> {
  */
 export async function gqlFetch<TResult>(
   query: string,
-  { variables, tags, revalidate }: FetchOptions = {},
+  { variables, tags, revalidate, token }: FetchOptions = {},
 ): Promise<TResult> {
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
   const response = await fetch(env.graphqlEndpoint, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers,
     body: JSON.stringify({ query, variables }),
     next: { tags, revalidate },
   });

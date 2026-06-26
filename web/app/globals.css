@@ -467,6 +467,10 @@ a {
   align-items: center;
   gap: var(--space-4);
 }
+.btn--fav {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
 
 /* ─── Форма бронирования ─── */
 .booking {
