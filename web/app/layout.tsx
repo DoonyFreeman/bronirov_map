@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Manrope } from 'next/font/google';
 import Link from 'next/link';
 
+import { AuthNav } from '@/components/AuthNav';
+
 import './globals.css';
 
 const manrope = Manrope({
@@ -32,9 +34,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <nav className="site-nav" aria-label="Основная навигация">
               <Link href="/search">Каталог</Link>
               <Link href="/map">Карта</Link>
-              <Link href="/account/bookings">Кабинет</Link>
-              <Link href="/dashboard">Бизнес</Link>
-              <Link href="/login">Войти</Link>
+              <AuthNav />
             </nav>
           </div>
         </header>

@@ -123,6 +123,17 @@ a {
 .site-nav a:hover {
   color: var(--color-foreground);
 }
+.site-nav__link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: var(--color-muted-fg);
+  cursor: pointer;
+}
+.site-nav__link-btn:hover {
+  color: var(--color-foreground);
+}
 
 /* ─── Hero ─── */
 .hero {
