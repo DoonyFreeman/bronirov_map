@@ -72,6 +72,7 @@ final class CompanyFields implements Module {
 					$this->acf_field( self::META_LONGITUDE, __( 'Долгота', 'servicehub' ), 'number' ),
 					$this->acf_field( self::META_PRICE_FROM, __( 'Цена от, ₽', 'servicehub' ), 'number' ),
 					$this->acf_field( 'company_telegram_chat_id', __( 'Telegram chat_id (для уведомлений)', 'servicehub' ), 'text' ),
+					$this->acf_field( 'company_owner', __( 'ID пользователя-владельца', 'servicehub' ), 'number' ),
 				),
 			)
 		);

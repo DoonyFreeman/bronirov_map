@@ -157,6 +157,68 @@ export const TOGGLE_FAVORITE_MUTATION = /* GraphQL */ `
   }
 `;
 
+export const MY_COMPANY_QUERY = /* GraphQL */ `
+  query MyCompany {
+    myCompany {
+      databaseId
+      title
+      slug
+      services {
+        databaseId
+        title
+        price
+        duration
+      }
+    }
+  }
+`;
+
+export const COMPANY_BOOKINGS_QUERY = /* GraphQL */ `
+  query CompanyBookings {
+    companyBookings {
+      databaseId
+      date
+      time
+      status
+      serviceName
+      clientName
+      clientPhone
+    }
+  }
+`;
+
+export const SET_BOOKING_STATUS_MUTATION = /* GraphQL */ `
+  mutation SetBookingStatus($id: ID!, $status: String!) {
+    setBookingStatus(input: { clientMutationId: "web", bookingId: $id, status: $status }) {
+      status
+    }
+  }
+`;
+
+export const SAVE_COMPANY_SERVICE_MUTATION = /* GraphQL */ `
+  mutation SaveCompanyService($serviceId: ID, $title: String!, $price: Float, $duration: Int) {
+    saveCompanyService(
+      input: {
+        clientMutationId: "web"
+        serviceId: $serviceId
+        title: $title
+        price: $price
+        duration: $duration
+      }
+    ) {
+      serviceDatabaseId
+    }
+  }
+`;
+
+export const DELETE_COMPANY_SERVICE_MUTATION = /* GraphQL */ `
+  mutation DeleteCompanyService($id: ID!) {
+    deleteCompanyService(input: { clientMutationId: "web", serviceId: $id }) {
+      deleted
+    }
+  }
+`;
+
 export const ALL_COMPANY_SLUGS_QUERY = /* GraphQL */ `
   query AllCompanySlugs {
     companies(first: 1000) {

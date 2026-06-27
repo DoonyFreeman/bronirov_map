@@ -33,6 +33,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               <Link href="/search">Каталог</Link>
               <Link href="/map">Карта</Link>
               <Link href="/account/bookings">Кабинет</Link>
+              <Link href="/dashboard">Бизнес</Link>
               <Link href="/login">Войти</Link>
             </nav>
           </div>
