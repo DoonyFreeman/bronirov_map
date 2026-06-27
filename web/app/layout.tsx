@@ -31,6 +31,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             </Link>
             <nav className="site-nav" aria-label="Основная навигация">
               <Link href="/search">Каталог</Link>
+              <Link href="/map">Карта</Link>
               <Link href="/account/bookings">Кабинет</Link>
               <Link href="/login">Войти</Link>
             </nav>
